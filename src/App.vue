@@ -15,7 +15,7 @@ export default {
                 "--midBlue": "#1080c5",
                 "--darkBlue": "#0e6396",
                 "--blueHover": "#f5f8fc",
-                "--layoutWidth": "1400px",
+                "--layoutWidth": "1080px",
             };
         },
     },

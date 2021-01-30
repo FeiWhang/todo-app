@@ -1,10 +1,7 @@
 <template>
     <div class="login">
         <Header />
-
-        <section class="body">
-            <h1>This is a login page</h1>
-        </section>
+        <h1>This is a login page</h1>
     </div>
 </template>
 

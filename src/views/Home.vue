@@ -1,9 +1,7 @@
 <template>
     <div class="home">
         <Header />
-        <section class="body">
-            <HomeBody />
-        </section>
+        <HomeBody />
     </div>
 </template>
 

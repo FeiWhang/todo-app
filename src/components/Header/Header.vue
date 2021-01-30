@@ -44,12 +44,12 @@ export default {
     z-index: 100;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     background-color: rgba($color: #ffffff, $alpha: 0.8);
     backdrop-filter: blur(18.88px);
-    border-bottom: 1px solid var(--blueHover);
-
-    margin: 0 auto 5rem auto;
+    border-bottom: 2px solid var(--blueHover);
+    padding: 12px 0;
+    margin: 0 auto 6rem auto;
 }
 
 .HeaderLogo {

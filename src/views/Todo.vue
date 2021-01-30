@@ -1,9 +1,7 @@
 <template>
     <div class="todo">
         <Header />
-        <section class="body">
-            <h1>This is a todo page</h1>
-        </section>
+        <h1>This is a todo page</h1>
     </div>
 </template>
 
