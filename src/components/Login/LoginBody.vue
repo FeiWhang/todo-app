@@ -4,26 +4,57 @@
             <h1>Login</h1>
             <div class="LoginCard__email">
                 <img src="@/assets/img/user.png" alt="" />
-                <input type="text" placeholder="Email" />
+                <input v-model.trim="email" type="text" placeholder="Email" />
             </div>
             <div class="LoginCard__password">
                 <img src="@/assets/img/lock.png" alt="" />
-                <input type="password" placeholder="Password" />
+                <input
+                    v-model.trim="password"
+                    type="password"
+                    placeholder="Password"
+                    @keyup.enter="handleLogin"
+                />
             </div>
-            <button class="LoginCard__loginButton">LOG IN</button>
+            <button class="LoginCard__loginButton" @click="handleLogin">
+                LOG IN
+            </button>
 
             <div class="LoginCard__footer">
                 <p>
-                    Not a member? <span><a href="">Sign up now</a></span>
+                    Not a member?
                 </p>
+                <LinkGo
+                    to=""
+                    target="_blank"
+                    title="Sign up"
+                    bgColor="transparent"
+                    padding="0"
+                    elemColor="#0e6396"
+                />
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import LinkGo from "@/components/LinkGo";
 export default {
     name: "LoginBody",
+    components: { LinkGo },
+    data: () => {
+        return {
+            email: "",
+            password: "",
+        };
+    },
+    methods: {
+        handleLogin() {
+            this.$store.dispatch("login", {
+                email: this.email,
+                password: this.password,
+            });
+        },
+    },
 };
 </script>
 
@@ -43,7 +74,7 @@ export default {
         0 -12px 36px -8px rgba(0, 0, 0, 0.025);
 
     h1 {
-        margin-bottom: 2.5rem;
+        margin-bottom: 3rem;
         font-size: 32px;
     }
 
@@ -74,7 +105,7 @@ export default {
 
     &__password {
         position: relative;
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
         img {
             position: absolute;
             top: 11px;
@@ -90,31 +121,29 @@ export default {
 
     &__loginButton {
         cursor: pointer;
-        font-size: 18px;
-        background-image: linear-gradient(
-            to bottom right,
-            var(--lightBlue),
-            var(--darkBlue)
-        );
+        font-size: 16px;
+        background-color: var(--darkBlue);
         border: none;
-        padding: 10px 24px;
+        padding: 8px 24px;
+        font-weight: 500;
         border-radius: 32px;
         color: white;
         outline: none;
-        margin-bottom: 4rem;
+        margin-bottom: 6rem;
+        transition: opacity 0.3s ease;
+    }
+
+    &__loginButton:hover {
+        opacity: 0.75;
     }
 
     &__footer {
-        margin-left: 8px;
-        a {
-            text-decoration: none;
-            color: var(--regBlue);
-            padding: 5px 16px;
-            margin-left: 6px;
-            border-radius: 16px;
-        }
-        a:hover {
-            background-color: var(--blueHover);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        p {
+            margin-right: 16px;
         }
     }
 }

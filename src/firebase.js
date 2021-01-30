@@ -19,18 +19,11 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
+// make it persist
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
 // collection references
 const usersCollection = db.collection("users");
-const postsCollection = db.collection("posts");
-const commentsCollection = db.collection("comments");
-const likesCollection = db.collection("likes");
 
 // export utils/refs
-export {
-    db,
-    auth,
-    usersCollection,
-    postsCollection,
-    commentsCollection,
-    likesCollection,
-};
+export { db, auth, usersCollection };
