@@ -22,10 +22,17 @@
                 </div>
             </div>
         </section>
-        <section class="HomeBody__register">
+        <section class="HomeBody__login">
             <div class="layout">
-                <div class="Register">
-                    <h1>Register Now!</h1>
+                <div class="Login">
+                    <h1>Already have an account?</h1>
+                    <LinkGo
+                        to="/login"
+                        target="_blank"
+                        title="Login now"
+                        bgColor="#0e6396"
+                        elemColor="white"
+                    />
                 </div>
             </div>
         </section>
@@ -45,10 +52,10 @@ export default {
     .layout {
         width: var(--layoutWidth);
         margin: 0 auto;
+        padding: 6rem 0;
     }
 
-    &__register {
-        height: 300px;
+    &__login {
         background-color: var(--blueHover);
     }
 }
@@ -73,8 +80,19 @@ export default {
     }
 
     &__logo {
-        height: 380px;
+        height: 388px;
         width: auto;
     }
+}
+
+.Login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h1 {
+        margin: 0 0 2rem 0;
+    }
+
+    padding: 4rem 0;
 }
 </style>

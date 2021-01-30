@@ -1,19 +1,22 @@
 <template>
     <div class="login">
         <Header />
-        <h1>This is a login page</h1>
+        <LoginBody />
     </div>
 </template>
 
 <script>
 import Header from "@/components/Header/Header.vue";
-// import HomeBody from "@/components/Home/HomeBody.vue";
+import LoginBody from "@/components/Login/LoginBody.vue";
 
 export default {
     name: "Login",
+    metaInfo: {
+        title: "Login",
+    },
     components: {
         Header,
-        // HomeBody,
+        LoginBody,
     },
 };
 </script>

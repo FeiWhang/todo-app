@@ -49,7 +49,7 @@ export default {
     backdrop-filter: blur(18.88px);
     border-bottom: 2px solid var(--blueHover);
     padding: 12px 0;
-    margin: 0 auto 6rem auto;
+    margin: 0 auto 4rem auto;
 }
 
 .HeaderLogo {

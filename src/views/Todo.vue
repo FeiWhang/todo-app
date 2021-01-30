@@ -11,6 +11,9 @@ import Header from "@/components/Header/Header.vue";
 
 export default {
     name: "Todo",
+    metaInfo: {
+        title: "To do",
+    },
     components: {
         Header,
         // HomeBody,
