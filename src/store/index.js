@@ -1,13 +1,16 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import login from "./modules/login";
+import login from "./modules/authentication";
 import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
-/* eslint-disable no-new */
+const userState = createPersistedState({
+    paths: ["userProfile"],
+});
+
 const store = new Vuex.Store({
-    plugins: [createPersistedState()],
+    plugins: [userState],
     modules: {
         login,
     },

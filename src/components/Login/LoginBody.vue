@@ -4,7 +4,12 @@
             <h1>Login</h1>
             <div class="LoginCard__email">
                 <img src="@/assets/img/user.png" alt="" />
-                <input v-model.trim="email" type="text" placeholder="Email" />
+                <input
+                    v-model.trim="email"
+                    type="text"
+                    placeholder="Email"
+                    @keyup.enter="handleLogin"
+                />
             </div>
             <div class="LoginCard__password">
                 <img src="@/assets/img/lock.png" alt="" />
@@ -19,12 +24,16 @@
                 LOG IN
             </button>
 
+            <p class="LoginCard__error" if="this.errorMessage">
+                {{ this.errorMessage }}
+            </p>
+
             <div class="LoginCard__footer">
                 <p>
                     Not a member?
                 </p>
                 <LinkGo
-                    to=""
+                    to="/register"
                     target="_blank"
                     title="Sign up"
                     bgColor="transparent"
@@ -38,6 +47,8 @@
 
 <script>
 import LinkGo from "@/components/LinkGo";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
     name: "LoginBody",
     components: { LinkGo },
@@ -48,12 +59,16 @@ export default {
         };
     },
     methods: {
+        ...mapActions(["login"]),
         handleLogin() {
-            this.$store.dispatch("login", {
+            this.login({
                 email: this.email,
                 password: this.password,
             });
         },
+    },
+    computed: {
+        ...mapGetters(["errorMessage"]),
     },
 };
 </script>
@@ -145,6 +160,10 @@ export default {
         p {
             margin-right: 16px;
         }
+    }
+
+    &__error {
+        color: red;
     }
 }
 </style>
