@@ -9,12 +9,15 @@ Vue.config.productionTip = false;
 Vue.use(VueMeta);
 
 let app;
-auth.onAuthStateChanged(() => {
+auth.onAuthStateChanged((user) => {
     if (!app) {
         app = new Vue({
             router,
             store,
             render: (h) => h(App),
         }).$mount("#app");
+    }
+    if (user && router.currentRoute.path != "/login") {
+        store.dispatch("fetchProfile", user);
     }
 });

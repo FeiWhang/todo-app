@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import Header from "@/components/Header/Header.vue";
-import LoginBody from "@/components/Login/LoginBody.vue";
+import Header from "@/components/Header.vue";
+import LoginBody from "@/components/LoginBody.vue";
 
 export default {
     name: "Login",

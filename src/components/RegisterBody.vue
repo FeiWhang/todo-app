@@ -2,24 +2,45 @@
     <div class="RegisterBody">
         <div class="RegisterCard">
             <h1>Get Started</h1>
-            <div class="RegisterCard__email">
-                <img src="@/assets/img/user.png" alt="" />
-                <input
-                    v-model.trim="email"
-                    type="text"
-                    placeholder="Email"
-                    @keyup.enter="handleLogin"
-                />
+            <div class="RegisterCardForm">
+                <div class="RegisterCardForm__name">
+                    <input
+                        v-model.trim="firstName"
+                        type="text"
+                        placeholder="First name"
+                    />
+                    <input
+                        v-model.trim="lastName"
+                        type="text"
+                        placeholder="Last name"
+                    />
+                </div>
+                <div class="RegisterCardForm__email">
+                    <input
+                        v-model.trim="email"
+                        type="text"
+                        placeholder="Email"
+                        @keyup.enter="handleLogin"
+                    />
+                </div>
+                <div class="RegisterCardForm__password">
+                    <input
+                        v-model.trim="password"
+                        type="password"
+                        placeholder="Password"
+                        @keyup.enter="handleRegister"
+                    />
+                </div>
+                <div class="RegisterCardForm__confirmPassword">
+                    <input
+                        v-model.trim="confirmPassword"
+                        type="password"
+                        placeholder="Confirm password"
+                        @keyup.enter="handleRegister"
+                    />
+                </div>
             </div>
-            <div class="RegisterCard__password">
-                <img src="@/assets/img/lock.png" alt="" />
-                <input
-                    v-model.trim="password"
-                    type="password"
-                    placeholder="Password"
-                    @keyup.enter="handleRegister"
-                />
-            </div>
+
             <button
                 class="RegisterCard__registerButton"
                 @click="handleRegister"
@@ -55,16 +76,22 @@ export default {
     components: { LinkGo },
     data: () => {
         return {
+            firstName: "",
+            lastName: "",
             email: "",
             password: "",
+            confirmPassword: "",
         };
     },
     methods: {
         ...mapActions(["register"]),
         handleRegister() {
             this.register({
+                firstName: this.firstName,
+                lastName: this.lastName,
                 email: this.email,
                 password: this.password,
+                confirmPassword: this.confirmPassword,
             });
         },
     },
@@ -94,47 +121,6 @@ export default {
         font-size: 32px;
     }
 
-    input {
-        padding: 10px 16px 10px 56px;
-        font-size: 20px;
-        border-radius: 16px;
-        background-color: var(--blueHover);
-        border: none;
-        outline: none;
-    }
-
-    &__email {
-        position: relative;
-        margin-bottom: 1rem;
-        img {
-            position: absolute;
-            top: 11px;
-            left: 18px;
-            height: 19px;
-            width: auto;
-        }
-    }
-
-    &__password {
-        position: relative;
-        margin-bottom: 2rem;
-        img {
-            position: absolute;
-            top: 11px;
-            left: 16px;
-            height: 22px;
-            width: auto;
-        }
-    }
-
-    input::placeholder {
-        color: rgba(0, 0, 0, 0.18);
-    }
-
-    input:focus {
-        box-shadow: 0 0 5px var(--midBlue);
-    }
-
     &__registerButton {
         cursor: pointer;
         font-size: 16px;
@@ -142,6 +128,7 @@ export default {
         border: none;
         padding: 8px 24px;
         font-weight: 500;
+        width: 120px;
         border-radius: 32px;
         color: white;
         outline: none;
@@ -149,7 +136,7 @@ export default {
         transition: opacity 0.3s ease;
     }
 
-    &__loginButton:hover {
+    &__registerButton:hover {
         opacity: 0.75;
     }
 
@@ -165,6 +152,43 @@ export default {
 
     &__error {
         color: red;
+    }
+}
+
+.RegisterCardForm {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+    input {
+        padding: 12px 24px;
+        margin: 0.5rem 1rem;
+        width: 500px;
+        font-size: 20px;
+        border-radius: 16px;
+        background-color: var(--blueHover);
+        border: none;
+        outline: none;
+    }
+
+    input::placeholder {
+        color: rgba(0, 0, 0, 0.18);
+    }
+
+    input:focus {
+        box-shadow: 0 0 5px var(--midBlue);
+    }
+
+    &__confirmPassword {
+        margin-bottom: 2.5rem;
+    }
+
+    &__name {
+        display: flex;
+        input {
+            margin: 0.5rem;
+            width: 218px;
+        }
     }
 }
 </style>

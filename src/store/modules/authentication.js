@@ -1,32 +1,35 @@
-import * as fb from "@/firebase";
+import { db, auth } from "@/firebase";
 import router from "@/router/index";
 
 const state = {
-    userProfile: null,
+    userProfile: {
+        firstName: "",
+        lastName: "",
+        email: "",
+    },
     loginErrorMessage: "",
     registerErrorMessage: "",
 };
 
 const getters = {
-    user: (state) => state.userProfile,
-    authenticated: () => state.userProfile != null,
+    userProfile: (state) => state.userProfile,
+    authenticated: () => (auth.currentUser ? true : false),
     loginErrorMessage: (state) => state.loginErrorMessage,
     registerErrorMessage: (state) => state.registerErrorMessage,
 };
 
 const actions = {
-    async login({ commit }, form) {
+    async login({ commit, dispatch }, form) {
         try {
             // sign user in
-            const response = await fb.auth.signInWithEmailAndPassword(
+            const response = await auth.signInWithEmailAndPassword(
                 form.email,
                 form.password
             );
 
             if (response) {
                 // set user profile  in state
-                commit("setUserProfile", response.user);
-                router.push("/todo");
+                dispatch("fetchProfile", response.user);
             } else {
                 console.log(response);
             }
@@ -35,33 +38,68 @@ const actions = {
         }
     },
 
+    async fetchProfile({ commit }, user) {
+        const userProfile = await db
+            .ref("users/" + user.uid)
+            .once("value")
+            .then((snapshot) => snapshot.val());
+
+        commit("setUser", userProfile);
+
+        if (router.currentRoute.path === "/login") {
+            router.push("/todo");
+        }
+    },
+
     async logout({ commit }) {
-        await fb.auth.signOut();
-        commit("setUserProfile", null);
+        await auth.signOut();
+        commit("setUser", {
+            firstName: "",
+            lastName: "",
+            email: "",
+        });
         router.push("/login");
     },
 
     async register({ commit }, form) {
         try {
-            const response = await fb.auth.createUserWithEmailAndPassword(
+            // when confirm password doesn't match
+            if (form.password != form.confirmPassword) {
+                const passNotMatchError = new Error();
+                passNotMatchError.code = "pass-not-match";
+                throw passNotMatchError;
+            }
+            const response = await auth.createUserWithEmailAndPassword(
                 form.email,
                 form.password
             );
 
             if (response) {
                 // successfully registered
-                commit("setUserProfile", response.user);
+
+                commit("registerUser", {
+                    firstName: form.firstName,
+                    lastName: form.lastName,
+                    email: form.email,
+                });
                 router.push("/register/success");
             }
         } catch (e) {
+            console.log(e);
             commit("setRegisterError", e);
         }
     },
 };
 
 const mutations = {
-    setUserProfile(state, userProfile) {
+    setUser(state, userProfile) {
         state.userProfile = userProfile;
+    },
+
+    registerUser(state, userProfile) {
+        state.userProfile = userProfile;
+
+        db.ref("users/" + auth.currentUser.uid).set(userProfile);
     },
     setLoginError(state, e) {
         if (e.code == "auth/user-not-found") {
@@ -76,11 +114,15 @@ const mutations = {
     },
     setRegisterError(state, e) {
         console.log(e.code);
-        if (e.code == "auth/invalid-email") {
+        if (e.code == "pass-not-match") {
+            state.registerErrorMessage = "Confirm password does not match";
+        } else if (e.code == "auth/invalid-email") {
             state.registerErrorMessage = "Bad email format";
         } else if (e.code == "auth/weak-password") {
             state.registerErrorMessage =
                 "Password must be at least 6 characters";
+        } else if (e.code == "auth/email-already-in-use") {
+            state.registerErrorMessage = "This email is already taken";
         } else {
             state.registerErrorMessage = "Register failed";
         }

@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-import "firebase/firestore";
+import "firebase/database";
 
 // firebase init - add your own config here
 const firebaseConfig = {
@@ -16,14 +16,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 // utils
-const db = firebase.firestore();
+const db = firebase.database();
 const auth = firebase.auth();
 
 // make it persist
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-// collection references
-const usersCollection = db.collection("users");
-
 // export utils/refs
-export { db, auth, usersCollection };
+export { db, auth };

@@ -1,13 +1,13 @@
 <template>
     <div class="todo">
         <Header />
-        <h1>This is a todo page</h1>
+        <TodoBody />
     </div>
 </template>
 
 <script>
-import Header from "@/components/Header/Header.vue";
-// import HomeBody from "@/components/Home/HomeBody.vue";
+import Header from "@/components/Header.vue";
+import TodoBody from "@/components/Todo/TodoBody.vue";
 
 export default {
     name: "Todo",
@@ -16,7 +16,7 @@ export default {
     },
     components: {
         Header,
-        // HomeBody,
+        TodoBody,
     },
 };
 </script>

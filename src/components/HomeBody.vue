@@ -7,8 +7,7 @@
                         <h1>It's how you</h1>
                         <h1>prioritize in life</h1>
                         <LinkGo
-                            to="/login"
-                            target="_blank"
+                            to="/register"
                             title="Join us"
                             bgColor="#324558"
                             elemColor="white"
@@ -28,7 +27,6 @@
                     <h1>Already have an account?</h1>
                     <LinkGo
                         to="/login"
-                        target="_blank"
                         title="Login now"
                         bgColor="#0e6396"
                         elemColor="white"

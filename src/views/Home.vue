@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import Header from "@/components/Header/Header.vue";
-import HomeBody from "@/components/Home/HomeBody.vue";
+import Header from "@/components/Header.vue";
+import HomeBody from "@/components/HomeBody.vue";
 
 export default {
     name: "Home",

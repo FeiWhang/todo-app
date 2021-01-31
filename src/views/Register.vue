@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import Header from "@/components/Header/Header.vue";
-import RegisterBody from "@/components/Register/RegisterBody.vue";
+import Header from "@/components/Header.vue";
+import RegisterBody from "@/components/RegisterBody.vue";
 
 export default {
     name: "Register",
