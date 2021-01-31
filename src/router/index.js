@@ -30,6 +30,17 @@ const routes = [
         path: "/register",
         name: "Register",
         component: () => import("../views/Register.vue"),
+        meta: {
+            preventByAuth: true,
+        },
+    },
+    {
+        path: "/register/success",
+        name: "RegisterSuccess",
+        component: () => import("../views/RegisterSuccess.vue"),
+        meta: {
+            requiresAuth: true,
+        },
     },
 ];
 

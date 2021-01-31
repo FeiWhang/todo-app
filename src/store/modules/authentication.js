@@ -49,9 +49,9 @@ const actions = {
             );
 
             if (response) {
-                // successfully registers
+                // successfully registered
                 commit("setUserProfile", response.user);
-                router.push("/todo");
+                router.push("/register/success");
             }
         } catch (e) {
             commit("setRegisterError", e);
@@ -82,7 +82,7 @@ const mutations = {
             state.registerErrorMessage =
                 "Password must be at least 6 characters";
         } else {
-            state.registerErrorMessage = "Login failed";
+            state.registerErrorMessage = "Register failed";
         }
     },
 };
