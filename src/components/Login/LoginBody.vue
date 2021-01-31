@@ -21,11 +21,11 @@
                 />
             </div>
             <button class="LoginCard__loginButton" @click="handleLogin">
-                LOG IN
+                Log in
             </button>
 
-            <p class="LoginCard__error" if="this.errorMessage">
-                {{ this.errorMessage }}
+            <p class="LoginCard__error" if="this.loginErrorMessage">
+                {{ this.loginErrorMessage }}
             </p>
 
             <div class="LoginCard__footer">
@@ -34,7 +34,6 @@
                 </p>
                 <LinkGo
                     to="/register"
-                    target="_blank"
                     title="Sign up"
                     bgColor="transparent"
                     padding="0"
@@ -68,7 +67,7 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(["errorMessage"]),
+        ...mapGetters(["loginErrorMessage"]),
     },
 };
 </script>

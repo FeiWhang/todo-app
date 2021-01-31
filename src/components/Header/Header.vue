@@ -104,6 +104,7 @@ export default {
     }
 
     &__logout {
+        cursor: pointer;
         color: red;
         padding: 6px 16px;
         border-radius: 24px;
