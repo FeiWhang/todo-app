@@ -39,15 +39,19 @@ const actions = {
     },
 
     async fetchProfile({ commit }, user) {
-        const userProfile = await db
-            .ref("users/" + user.uid)
-            .once("value")
-            .then((snapshot) => snapshot.val());
+        try {
+            const userProfile = await db
+                .ref("users/" + user.uid)
+                .once("value")
+                .then((snapshot) => snapshot.val());
 
-        commit("setUser", userProfile);
+            commit("setUser", userProfile);
 
-        if (router.currentRoute.path === "/login") {
-            router.push("/todo");
+            if (router.currentRoute.path === "/login") {
+                router.push("/todo");
+            }
+        } catch (e) {
+            console.log(e);
         }
     },
 

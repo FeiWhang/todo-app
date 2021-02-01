@@ -1,41 +1,43 @@
 <template>
     <div class="Header">
-        <router-link class="HeaderLogo" active-class="active" exact to="/">
-            <h1>todo</h1>
-        </router-link>
-        <div class="HeaderView">
-            <router-link
-                class="HeaderView__link"
-                active-class="active"
-                exact
-                to="/"
-            >
-                <span>Home</span>
+        <div class="HeaderContainer">
+            <router-link class="HeaderLogo" active-class="active" exact to="/">
+                <h1>todo</h1>
             </router-link>
-            <router-link
-                class="HeaderView__link"
-                active-class="active"
-                exact
-                to="/todo"
-            >
-                <span>To do</span>
-            </router-link>
-            <router-link
-                class="HeaderView__link"
-                active-class="active"
-                exact
-                to="/login"
-                v-if="!this.auth.currentUser"
-            >
-                <span>Login</span>
-            </router-link>
-            <span
-                class="HeaderView__logout"
-                v-if="this.auth.currentUser"
-                @click="handleLogout"
-            >
-                Logout
-            </span>
+            <div class="HeaderView">
+                <router-link
+                    class="HeaderView__link"
+                    active-class="active"
+                    exact
+                    to="/"
+                >
+                    <span>Home</span>
+                </router-link>
+                <router-link
+                    class="HeaderView__link"
+                    active-class="active"
+                    exact
+                    to="/todo"
+                >
+                    <span>To do</span>
+                </router-link>
+                <router-link
+                    class="HeaderView__link"
+                    active-class="active"
+                    exact
+                    to="/login"
+                    v-if="!this.auth.currentUser"
+                >
+                    <span>Login</span>
+                </router-link>
+                <span
+                    class="HeaderView__logout"
+                    v-if="this.auth.currentUser"
+                    @click="handleLogout"
+                >
+                    Logout
+                </span>
+            </div>
         </div>
     </div>
 </template>
@@ -61,16 +63,19 @@ export default {
 
 <style lang="scss" scoped>
 .Header {
-    width: var(--layoutWidth);
     z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     background-color: rgba($color: #ffffff, $alpha: 0.8);
     backdrop-filter: blur(18.88px);
     border-bottom: 2px solid var(--blueHover);
+}
+.HeaderContainer {
+    display: flex;
+    align-items: center;
+    width: var(--layoutWidth);
     padding: 12px 0;
-    margin: 0 auto 4rem auto;
+
+    justify-content: space-between;
+    margin: 0 auto;
 }
 
 .HeaderLogo {
