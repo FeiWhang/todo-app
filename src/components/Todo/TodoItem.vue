@@ -1,42 +1,44 @@
 <template>
-    <div class="TodoItem">
-        <div class="TodoItemMain">
-            <div class="TodoItemMain__left">
-                <button
-                    class="TodoItemMain__checkbox"
-                    @click="handleItemComplete"
-                >
-                    <v-icon v-if="!isCompleted" color="#e1e1e1"
-                        >mdi-checkbox-blank-circle-outline</v-icon
+    <div class="TodoItem" :style="hideStyle">
+        <div class="TodoItem__container" v-if="isShown">
+            <div class="TodoItemMain">
+                <div class="TodoItemMain__left">
+                    <button
+                        class="TodoItemMain__checkbox"
+                        @click="handleItemComplete"
                     >
-                    <v-icon v-if="isCompleted" color="#4fb79f"
-                        >mdi-checkbox-marked-circle-outline</v-icon
+                        <v-icon v-if="!isCompleted" color="#e1e1e1"
+                            >mdi-checkbox-blank-circle-outline</v-icon
+                        >
+                        <v-icon v-if="isCompleted" color="#4fb79f"
+                            >mdi-checkbox-marked-circle-outline</v-icon
+                        >
+                    </button>
+                    <p
+                        class="TodoItemMain__title"
+                        :style="titleStyle"
+                        @click="handleItemComplete"
                     >
-                </button>
-                <p
-                    class="TodoItemMain__title"
-                    :style="titleStyle"
-                    @click="handleItemComplete"
-                >
-                    {{ title }}
-                </p>
+                        {{ title }}
+                    </p>
+                </div>
+                <div class="TodoItemMain__right">
+                    <button
+                        class="TodoItemMain__toggleDetail"
+                        v-on:click="toggleDropdown"
+                    >
+                        <v-icon color="#c8c8c8">mdi-chevron-down</v-icon>
+                    </button>
+                </div>
             </div>
-            <div class="TodoItemMain__right">
-                <button
-                    class="TodoItemMain__toggleDetail"
-                    v-on:click="toggleDropdown"
-                >
-                    <v-icon color="#c8c8c8">mdi-chevron-down</v-icon>
-                </button>
-            </div>
+            <v-expand-transition>
+                <TodoItemDropdown
+                    v-if="isDropdown"
+                    :todosIndex="todosIndex"
+                    :itemIndex="itemIndex"
+                />
+            </v-expand-transition>
         </div>
-        <v-expand-transition>
-            <TodoItemDropdown
-                v-if="isDropdown"
-                :todosIndex="todosIndex"
-                :itemIndex="itemIndex"
-            />
-        </v-expand-transition>
     </div>
 </template>
 
@@ -53,6 +55,7 @@ export default {
             title: "",
             isCompleted: false,
             isDropdown: false,
+            isShown: false,
         };
     },
     mounted() {
@@ -68,6 +71,7 @@ export default {
             const item = snapshot.val();
             this.title = item.title;
             this.isCompleted = item.complete;
+            this.isShown = item.shown;
         });
     },
     methods: {
@@ -108,6 +112,12 @@ export default {
                 color: this.isCompleted ? "#d9d9d9" : "inherit",
             };
         },
+        hideStyle() {
+            return {
+                padding: this.isShown ? "12px 0" : "0",
+                "border-bottom": this.isShown ? "1px solid #ededed" : "none",
+            };
+        },
     },
 };
 </script>
@@ -116,8 +126,7 @@ export default {
 .TodoItem {
     position: relative;
     font-size: 18px;
-    border-bottom: 1px solid #ededed;
-    padding: 12px 0;
+
     width: 100%;
     text-align: left;
 }
@@ -130,7 +139,11 @@ export default {
     &__left {
         display: flex;
         align-items: center;
+        justify-self: center;
         margin-left: 18px;
+        p {
+            margin-bottom: -3px;
+        }
     }
 
     &__right {

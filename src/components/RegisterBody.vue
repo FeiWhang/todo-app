@@ -147,11 +147,13 @@ export default {
 
         p {
             margin-right: 16px;
+            margin-bottom: 0;
         }
     }
 
     &__error {
         color: red;
+        margin-bottom: 0px;
     }
 }
 

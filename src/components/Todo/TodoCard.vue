@@ -7,6 +7,7 @@
             :todosIndex="todosIndex"
             :itemIndex="index"
         />
+        <TodoFooter :todosIndex="todosIndex" />
     </div>
 </template>
 
@@ -14,10 +15,11 @@
 import { db, auth } from "@/firebase";
 import TodoHeader from "./TodoHeader";
 import TodoItem from "./TodoItem";
+import TodoFooter from "./TodoFooter";
 
 export default {
     name: "TodoCard",
-    components: { TodoHeader, TodoItem },
+    components: { TodoHeader, TodoItem, TodoFooter },
     props: ["todosIndex"],
     data: () => {
         return {

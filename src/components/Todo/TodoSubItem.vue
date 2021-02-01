@@ -200,6 +200,7 @@ export default {
     &__title {
         cursor: default;
         transition: color 0.3s ease;
+        margin-bottom: -3px;
     }
 
     &__toggleDetail {

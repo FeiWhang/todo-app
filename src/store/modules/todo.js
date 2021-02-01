@@ -1,20 +1,21 @@
 const states = {
-    todos: {},
+    isHideCompleted: true,
 };
 
 const getters = {
-    todos: (state) => state.todos,
+    isHideCompleted: (state) => state.isHideCompleted,
 };
 
 const actions = {
-    updateTodo({ commit }, todos) {
-        commit("setTodo", todos);
+    toggleHideCompleted({ commit }) {
+        commit("setHideCompleted");
     },
 };
 
 const mutations = {
-    setTodo(state, todos) {
-        state.todos = todos;
+    setHideCompleted(state) {
+        state.isHideCompleted = !state.isHideCompleted;
+        console.log(state.isHideCompleted);
     },
 };
 

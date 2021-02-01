@@ -61,6 +61,7 @@ export default {
         handleNew(e) {
             const todo = {
                 name: e.target.value.trim(),
+                hideComplete: false,
             };
             this.contactRef.push(todo);
             e.target.value = "";

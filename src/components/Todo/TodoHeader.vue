@@ -83,6 +83,7 @@ export default {
                 title: e.target.value.trim(),
                 targetDate: this.pickedDate,
                 complete: false,
+                shown: true,
             };
             db.ref(
                 "todos/" +
@@ -103,7 +104,7 @@ export default {
         handlePickedDate() {
             setTimeout(() => {
                 this.toggleDatePicker();
-            }, 250);
+            }, 100);
         },
     },
 };

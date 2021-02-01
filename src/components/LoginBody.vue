@@ -165,6 +165,7 @@ export default {
 
         p {
             margin-right: 16px;
+            margin-bottom: 0;
         }
     }
 

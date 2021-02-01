@@ -145,6 +145,9 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
+    p {
+        margin-bottom: -3px;
+    }
 }
 
 .TodoItemDropdownOption {
