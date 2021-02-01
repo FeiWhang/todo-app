@@ -22,9 +22,9 @@
             />
             <button
                 class="TodoHeader__toggleDatePicker"
-                @click="toggleDataPicker"
+                @click="toggleDatePicker"
             >
-                <v-icon right color="#737373">
+                <v-icon right color="#c8c8c8">
                     mdi-calendar-today
                 </v-icon>
             </button>
@@ -62,12 +62,14 @@ export default {
         handleCompleteAll() {
             console.log("complete all");
         },
-        toggleDataPicker() {
+        toggleDatePicker() {
             this.showDatePicker = !this.showDatePicker;
         },
         handlePickedDate() {
             console.log(this.pickedDate);
-            this.toggleDataPicker();
+            setTimeout(() => {
+                this.toggleDataPicker();
+            }, 250);
         },
     },
 };
@@ -76,6 +78,7 @@ export default {
 <style lang="scss" scoped>
 .TodoHeader {
     width: 100%;
+    border-bottom: 1px solid #ededed;
     header {
         position: relative;
     }
@@ -92,7 +95,7 @@ export default {
         width: 88%;
         font-size: 20px;
         line-height: 1.4em;
-        padding: 12px 12px 12px 32px;
+        padding: 12px 12px 12px 38px;
         outline: none;
         border: none;
     }
@@ -111,7 +114,7 @@ export default {
         cursor: pointer;
         position: absolute;
         opacity: 100;
-        left: 18px;
+        left: 24px;
         top: 88px;
         transform: rotate(90deg);
     }

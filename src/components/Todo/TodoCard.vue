@@ -2,9 +2,6 @@
     <div class="TodoCard">
         <TodoHeader />
         <TodoItem />
-        <TodoItem />
-        <TodoItem />
-        <TodoItem />
     </div>
 </template>
 
