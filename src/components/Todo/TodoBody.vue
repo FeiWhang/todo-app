@@ -32,7 +32,7 @@
 <script>
 import TodoCard from "./TodoCard";
 import { db, auth } from "@/firebase";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
     name: "TodoBody",
@@ -55,7 +55,6 @@ export default {
         ...mapGetters(["userProfile"]),
     },
     methods: {
-        ...mapActions(["fetchTodo", "initTodo"]),
         toggleNew() {
             this.showNew = !this.showNew;
         },

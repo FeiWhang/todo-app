@@ -1,10 +1,22 @@
-const states = {};
+const states = {
+    todos: {},
+};
 
-const getters = {};
+const getters = {
+    todos: (state) => state.todos,
+};
 
-const actions = {};
+const actions = {
+    updateTodo({ commit }, todos) {
+        commit("setTodo", todos);
+    },
+};
 
-const mutations = {};
+const mutations = {
+    setTodo(state, todos) {
+        state.todos = todos;
+    },
+};
 
 export default {
     states,

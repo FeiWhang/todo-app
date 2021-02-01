@@ -18,7 +18,13 @@
             type="text"
             v-on:keyup.enter="handleNewSubTodo"
         />
-        <TodoSubItem />
+        <TodoSubItem
+            v-for="(subItem, index) in subItems"
+            :key="index"
+            :todosIndex="todosIndex"
+            :itemIndex="itemIndex"
+            :subItemIndex="index"
+        />
     </div>
 </template>
 
@@ -33,6 +39,7 @@ export default {
     data: () => {
         return {
             date: "",
+            subItems: {},
         };
     },
     mounted() {
@@ -48,7 +55,19 @@ export default {
             const item = snapshot.val();
             this.date =
                 item.targetDate === "" ? "No target date" : item.targetDate;
-            this.isSubItems = item.isSubItems;
+        });
+
+        const subItemRef = db.ref(
+            "todos/" +
+                auth.currentUser.uid +
+                "/" +
+                this.todosIndex +
+                "/subItems/" +
+                this.itemIndex
+        );
+
+        subItemRef.on("value", (snapshot) => {
+            this.subItems = snapshot.val();
         });
     },
     methods: {
@@ -69,16 +88,16 @@ export default {
                     auth.currentUser.uid +
                     "/" +
                     this.todosIndex +
-                    "/subItems/"
+                    "/subItems/" +
+                    this.itemIndex
             );
 
             const subItem = {
-                [this.itemIndex]: {
-                    title: e.target.value.trim(),
-                    complete: false,
-                },
+                title: e.target.value.trim(),
+                complete: false,
             };
             subItemRef.push(subItem);
+            e.target.value = "";
         },
     },
 };

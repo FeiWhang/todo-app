@@ -32,21 +32,63 @@
 </template>
 
 <script>
+import { db, auth } from "@/firebase";
+
 export default {
     name: "TodoSubItem",
+    props: ["todosIndex", "itemIndex", "subItemIndex"],
     data: () => {
         return {
+            title: "",
             isCompleted: false,
-            title: "Chest Fly",
         };
+    },
+    mounted() {
+        const subItemRef = db.ref(
+            "todos/" +
+                auth.currentUser.uid +
+                "/" +
+                this.todosIndex +
+                "/subItems/" +
+                this.itemIndex +
+                "/" +
+                this.subItemIndex
+        );
+
+        subItemRef.on("value", (snapshot) => {
+            const subItems = snapshot.val();
+            this.title = subItems.title;
+            this.isCompleted = subItems.complete;
+        });
     },
     methods: {
         handleSubItemComplete() {
-            this.isCompleted = !this.isCompleted;
+            const subItemRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/subItems/" +
+                    this.itemIndex +
+                    "/" +
+                    this.subItemIndex
+            );
+
+            subItemRef.update({ complete: !this.isCompleted });
         },
 
         handleSubItemDelete() {
-            console.log("delete sub item");
+            const subItemRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/subItems/" +
+                    this.itemIndex +
+                    "/" +
+                    this.subItemIndex
+            );
+            subItemRef.remove();
         },
     },
     computed: {

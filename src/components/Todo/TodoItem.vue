@@ -33,8 +33,8 @@
         <v-expand-transition>
             <TodoItemDropdown
                 v-if="isDropdown"
-                :todosIndex="this.todosIndex"
-                :itemIndex="this.itemIndex"
+                :todosIndex="todosIndex"
+                :itemIndex="itemIndex"
             />
         </v-expand-transition>
     </div>
