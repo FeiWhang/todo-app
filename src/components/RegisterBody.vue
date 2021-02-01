@@ -187,7 +187,7 @@ export default {
         display: flex;
         input {
             margin: 0.5rem;
-            width: 218px;
+            width: 242px;
         }
     }
 }

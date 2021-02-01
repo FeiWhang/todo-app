@@ -1,9 +1,7 @@
 <template>
     <div class="TodoItemDropdown">
         <div class="TodoItemDropdownHeader">
-            <p class="TodoItemDropdownHeader__text">
-                Tuesday, 2 Feb 2564
-            </p>
+            <p class="TodoItemDropdownHeader__text">{{ date }}</p>
             <div class="TodoItemDropdownOption">
                 <button
                     class="TodoItemDropdownOption__delete"
@@ -14,21 +12,73 @@
                 </button>
             </div>
         </div>
-        <TodoSubItem />
-        <TodoSubItem />
-        <TodoSubItem />
+        <input
+            class="TodoItemDropdown__newSubItem"
+            placeholder="Add sub todo?"
+            type="text"
+            v-on:keyup.enter="handleNewSubTodo"
+        />
         <TodoSubItem />
     </div>
 </template>
 
 <script>
+import { db, auth } from "@/firebase";
 import TodoSubItem from "./TodoSubItem";
+
 export default {
     name: "TodoItemDropdown",
     components: { TodoSubItem },
+    props: ["todosIndex", "itemIndex"],
+    data: () => {
+        return {
+            date: "",
+        };
+    },
+    mounted() {
+        const itemRef = db.ref(
+            "todos/" +
+                auth.currentUser.uid +
+                "/" +
+                this.todosIndex +
+                "/items/" +
+                this.itemIndex
+        );
+        itemRef.on("value", (snapshot) => {
+            const item = snapshot.val();
+            this.date =
+                item.targetDate === "" ? "No target date" : item.targetDate;
+            this.isSubItems = item.isSubItems;
+        });
+    },
     methods: {
         handleItemDelete() {
-            console.log("delete todo item");
+            const itemRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/items/" +
+                    this.itemIndex
+            );
+            itemRef.remove();
+        },
+        handleNewSubTodo(e) {
+            const subItemRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/subItems/"
+            );
+
+            const subItem = {
+                [this.itemIndex]: {
+                    title: e.target.value.trim(),
+                    complete: false,
+                },
+            };
+            subItemRef.push(subItem);
         },
     },
 };
@@ -38,13 +88,23 @@ export default {
 .TodoItemDropdown {
     margin: 16px 58px;
     font-size: 16px;
+
+    &__newSubItem {
+        margin: 0;
+        width: 100%;
+        font-size: 16px;
+        line-height: 1.4em;
+        padding: 8px 8px 8px 2px;
+        outline: none;
+        border-bottom: 1px solid #f3f3f3;
+    }
 }
 
 .TodoItemDropdownHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
 }
 
 .TodoItemDropdownOption {

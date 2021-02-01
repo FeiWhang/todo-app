@@ -1,6 +1,4 @@
-// import { db, auth } from "@/firebase";
-
-const state = {};
+const states = {};
 
 const getters = {};
 
@@ -9,7 +7,7 @@ const actions = {};
 const mutations = {};
 
 export default {
-    state,
+    states,
     actions,
     getters,
     mutations,

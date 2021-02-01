@@ -1,17 +1,36 @@
 <template>
     <div class="TodoCard">
-        <TodoHeader />
-        <TodoItem />
+        <TodoHeader :todosIndex="todosIndex" />
+        <TodoItem
+            v-for="(item, index) in items"
+            :key="index"
+            :todosIndex="todosIndex"
+            :itemIndex="index"
+        />
     </div>
 </template>
 
 <script>
+import { db, auth } from "@/firebase";
 import TodoHeader from "./TodoHeader";
 import TodoItem from "./TodoItem";
 
 export default {
     name: "TodoCard",
     components: { TodoHeader, TodoItem },
+    props: ["todosIndex"],
+    data: () => {
+        return {
+            items: {},
+        };
+    },
+    mounted() {
+        db.ref(
+            "todos/" + auth.currentUser.uid + "/" + this.todosIndex + "/items"
+        ).on("value", (snapshot) => {
+            this.items = snapshot.val();
+        });
+    },
 };
 </script>
 

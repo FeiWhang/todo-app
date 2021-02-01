@@ -45,19 +45,42 @@
 </template>
 
 <script>
+import { db, auth } from "@/firebase";
+
 export default {
     name: "TodoHeader",
+    props: ["todosIndex"],
     data: () => {
         return {
-            todosTitle: "Work out",
+            todosTitle: "",
             pickedDate: "",
             showDatePicker: false,
         };
     },
+    mounted() {
+        // get todo name from db
+        db.ref(
+            "todos/" + auth.currentUser.uid + "/" + this.todosIndex + "/name"
+        ).on("value", (snapshot) => {
+            this.todosTitle = snapshot.val();
+        });
+    },
     methods: {
-        handleNewTodo() {
-            console.log(this.pickedDate);
-            console.log("new todo");
+        handleNewTodo(e) {
+            const item = {
+                title: e.target.value.trim(),
+                targetDate: this.pickedDate,
+                complete: false,
+            };
+            db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/items"
+            ).push(item);
+            this.pickedDate = "";
+            e.target.value = "";
         },
         handleCompleteAll() {
             console.log("complete all");
@@ -66,9 +89,8 @@ export default {
             this.showDatePicker = !this.showDatePicker;
         },
         handlePickedDate() {
-            console.log(this.pickedDate);
             setTimeout(() => {
-                this.toggleDataPicker();
+                this.toggleDatePicker();
             }, 250);
         },
     },
