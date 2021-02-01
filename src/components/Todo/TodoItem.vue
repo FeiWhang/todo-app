@@ -23,6 +23,14 @@
                     </p>
                 </div>
                 <div class="TodoItemMain__right">
+                    <v-progress-circular
+                        :value="progress"
+                        color="#90d3ef"
+                        :size="32"
+                        rotate="180"
+                    >
+                        <p>{{ progress }}</p>
+                    </v-progress-circular>
                     <button
                         class="TodoItemMain__toggleDetail"
                         v-on:click="toggleDropdown"
@@ -56,6 +64,7 @@ export default {
             isCompleted: false,
             isDropdown: false,
             isShown: false,
+            progress: 0,
         };
     },
     mounted() {
@@ -72,6 +81,29 @@ export default {
             this.title = item.title;
             this.isCompleted = item.complete;
             this.isShown = item.shown;
+        });
+
+        const subItemsRef = db.ref(
+            "todos/" +
+                auth.currentUser.uid +
+                "/" +
+                this.todosIndex +
+                "/subItems/" +
+                this.itemIndex
+        );
+
+        subItemsRef.on("value", (snapshot) => {
+            let completeCount = 0;
+            let totalCount = 0;
+            snapshot.forEach((childSnapshot) => {
+                const subItem = childSnapshot.val();
+                if (subItem.complete) {
+                    completeCount = completeCount + 1;
+                }
+                totalCount = totalCount + 1;
+            });
+
+            this.progress = Math.floor((completeCount * 100) / totalCount);
         });
     },
     methods: {
@@ -148,6 +180,11 @@ export default {
 
     &__right {
         margin-right: 18px;
+        p {
+            font-size: 11px;
+            font-weight: 600;
+            margin: 0;
+        }
     }
 
     &__checkbox {
@@ -164,6 +201,7 @@ export default {
     &__toggleDetail {
         outline: none;
         padding: 0;
+        margin-left: 8px;
     }
 }
 </style>

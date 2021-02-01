@@ -59,7 +59,35 @@ export default {
                 });
             });
         },
-        handleClearCompleted() {},
+        handleClearCompleted() {
+            const itemsRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/items"
+            );
+
+            itemsRef.once("value", (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    const item = childSnapshot.val();
+
+                    const subItemRef = db.ref(
+                        "todos/" +
+                            auth.currentUser.uid +
+                            "/" +
+                            this.todosIndex +
+                            "/subItems/" +
+                            childSnapshot.key
+                    );
+
+                    if (item.complete) {
+                        childSnapshot.ref.remove();
+                        subItemRef.remove();
+                    }
+                });
+            });
+        },
     },
 };
 </script>
