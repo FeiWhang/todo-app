@@ -3,7 +3,12 @@
         <div class="LoginCard">
             <h1>Login</h1>
             <div class="LoginCard__email">
-                <img src="@/assets/img/user.png" alt="" />
+                <span class="LoginCard__email__icon">
+                    <v-icon color="rgba(0, 0, 0, 0.25)">
+                        mdi-account
+                    </v-icon>
+                </span>
+
                 <input
                     v-model.trim="email"
                     type="text"
@@ -12,7 +17,12 @@
                 />
             </div>
             <div class="LoginCard__password">
-                <img src="@/assets/img/lock.png" alt="" />
+                <span class="LoginCard__password__icon">
+                    <v-icon color="rgba(0, 0, 0, 0.25)">
+                        mdi-lock
+                    </v-icon>
+                </span>
+
                 <input
                     v-model.trim="password"
                     type="password"
@@ -108,23 +118,20 @@ export default {
     &__email {
         position: relative;
         margin-bottom: 1rem;
-        img {
-            position: absolute;
-            top: 11px;
-            left: 18px;
-            height: 19px;
-            width: auto;
-        }
     }
 
     &__password {
         position: relative;
         margin-bottom: 2rem;
-        img {
+    }
+
+    &__email,
+    &__password {
+        &__icon {
             position: absolute;
-            top: 11px;
+            top: 12px;
             left: 16px;
-            height: 22px;
+            height: 19px;
             width: auto;
         }
     }

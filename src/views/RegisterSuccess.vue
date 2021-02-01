@@ -1,7 +1,7 @@
 <template>
     <div class="registersuccess">
         <Header />
-        <img src="@/assets/check.png" alt="" />
+        <img src="@/assets/img/check.png" alt="" />
         <h1>You have successfully registered !</h1>
         <LinkGo to="/todo" title="Create your first todo" elemColor="#0e6396" />
     </div>

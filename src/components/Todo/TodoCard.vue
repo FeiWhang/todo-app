@@ -1,47 +1,20 @@
 <template>
     <div class="TodoCard">
         <TodoHeader />
-        <!-- <section class="Todo">
-            <ul class="TodoList">
-                <li
-                    :class="{ completed: todo.completed }"
-                    v-for="(todo, index) in todos"
-                    :key="index"
-                >
-                    <div
-                        class="view"
-                        v-if="
-                            currentViewIndex == 0
-                                ? true
-                                : currentViewIndex == 1
-                                ? !todo.completed
-                                : todo.completed
-                        "
-                    >
-                        <input
-                            class="toggle"
-                            type="checkbox"
-                            :checked="todo.completed"
-                            v-on:click="handleTodoCheck(index)"
-                        />
-                        <label>{{ todo.label }}</label>
-                        <button
-                            class="destroy"
-                            v-on:click="handleTodoDelete(index)"
-                        ></button>
-                    </div>
-                    <input class="edit" value="Create a TodoMVC template" />
-                </li>
-            </ul>
-        </section> -->
+        <TodoItem />
+        <TodoItem />
+        <TodoItem />
+        <TodoItem />
     </div>
 </template>
 
 <script>
 import TodoHeader from "./TodoHeader";
+import TodoItem from "./TodoItem";
+
 export default {
     name: "TodoCard",
-    components: { TodoHeader },
+    components: { TodoHeader, TodoItem },
 };
 </script>
 

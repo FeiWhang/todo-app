@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import { auth } from "./firebase";
 import VueMeta from "vue-meta";
+import vuetify from "./plugins/vuetify";
 
 Vue.config.productionTip = false;
 Vue.use(VueMeta);
@@ -14,6 +15,7 @@ auth.onAuthStateChanged((user) => {
         app = new Vue({
             router,
             store,
+            vuetify,
             render: (h) => h(App),
         }).$mount("#app");
     }
