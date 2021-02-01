@@ -63,6 +63,8 @@ export default {
                 name: e.target.value.trim(),
             };
             this.contactRef.push(todo);
+            e.target.value = "";
+            this.toggleNew();
         },
     },
 };

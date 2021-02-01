@@ -81,6 +81,20 @@ export default {
                     this.itemIndex
             );
             itemRef.update({ complete: !this.isCompleted });
+
+            const subItemRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/subItems/" +
+                    this.itemIndex
+            );
+            subItemRef.once("value", (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    childSnapshot.ref.update({ complete: this.isCompleted });
+                });
+            });
         },
 
         toggleDropdown() {

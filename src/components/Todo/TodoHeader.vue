@@ -4,6 +4,11 @@
             <h1 class="TodoHeader__title">
                 {{ todosTitle }}
             </h1>
+            <button class="TodoHeader__remove" @click="handleRemoveTodo">
+                <v-icon right color="#f1f1f1">
+                    mdi-trash-can-outline
+                </v-icon>
+            </button>
             <input
                 type="checkbox"
                 class="TodoHeader__completeAll"
@@ -19,6 +24,7 @@
                 placeholder="What needs to be done?"
                 type="text"
                 v-on:keyup.enter="handleNewTodo"
+                maxlength="45"
             />
             <button
                 class="TodoHeader__toggleDatePicker"
@@ -66,6 +72,12 @@ export default {
         });
     },
     methods: {
+        handleRemoveTodo() {
+            const todoRef = db.ref(
+                "todos/" + auth.currentUser.uid + "/" + this.todosIndex
+            );
+            todoRef.remove();
+        },
         handleNewTodo(e) {
             const item = {
                 title: e.target.value.trim(),
@@ -110,6 +122,14 @@ export default {
         padding: 1rem 0;
         font-size: 32px;
         background-color: var(--regBlue);
+    }
+
+    &__remove {
+        position: absolute;
+        top: 27px;
+        right: 20px;
+        outline: none;
+        border: none;
     }
 
     &__newTodo {

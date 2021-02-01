@@ -8,7 +8,7 @@
                     v-on:click="handleItemDelete"
                 >
                     <v-icon color="#cc9a9a">mdi-close</v-icon>
-                    <span>Delete this task</span>
+                    <span>Delete this todo</span>
                 </button>
             </div>
         </div>
@@ -17,6 +17,7 @@
             placeholder="Add sub todo?"
             type="text"
             v-on:keyup.enter="handleNewSubTodo"
+            maxlength="45"
         />
         <TodoSubItem
             v-for="(subItem, index) in subItems"
@@ -81,6 +82,16 @@ export default {
                     this.itemIndex
             );
             itemRef.remove();
+
+            const subItemRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/subItems/" +
+                    this.itemIndex
+            );
+            subItemRef.remove();
         },
         handleNewSubTodo(e) {
             const subItemRef = db.ref(
@@ -98,6 +109,16 @@ export default {
             };
             subItemRef.push(subItem);
             e.target.value = "";
+
+            const itemRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/items/" +
+                    this.itemIndex
+            );
+            itemRef.update({ complete: false });
         },
     },
 };

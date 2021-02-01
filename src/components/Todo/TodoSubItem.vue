@@ -75,6 +75,42 @@ export default {
             );
 
             subItemRef.update({ complete: !this.isCompleted });
+
+            const itemRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/items/" +
+                    this.itemIndex
+            );
+
+            if (this.isCompleted == false) {
+                itemRef.update({ complete: this.isCompleted });
+            }
+
+            // check if all completed
+            const subItemsRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/subItems/" +
+                    this.itemIndex
+            );
+
+            subItemsRef.once("value", (snapshot) => {
+                let isAllComplete = true;
+                snapshot.forEach((childSnapshot) => {
+                    if (!childSnapshot.val().complete) {
+                        isAllComplete = false;
+                    }
+                });
+
+                if (isAllComplete) {
+                    itemRef.update({ complete: true });
+                }
+            });
         },
 
         handleSubItemDelete() {
@@ -89,6 +125,44 @@ export default {
                     this.subItemIndex
             );
             subItemRef.remove();
+
+            // check if all completed
+            const itemRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/items/" +
+                    this.itemIndex
+            );
+
+            const subItemsRef = db.ref(
+                "todos/" +
+                    auth.currentUser.uid +
+                    "/" +
+                    this.todosIndex +
+                    "/subItems/" +
+                    this.itemIndex
+            );
+
+            subItemsRef.once("value", (snapshot) => {
+                let isAllComplete = true;
+                let count = 0;
+                snapshot.forEach((childSnapshot) => {
+                    count = count + 1;
+                    if (!childSnapshot.val().complete) {
+                        isAllComplete = false;
+                    }
+                });
+                console.log(snapshot);
+
+                if (isAllComplete && count != 0) {
+                    itemRef.update({ complete: true });
+                }
+                if (count == 0) {
+                    itemRef.update({ complete: false });
+                }
+            });
         },
     },
     computed: {
