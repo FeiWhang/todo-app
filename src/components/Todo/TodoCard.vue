@@ -24,12 +24,11 @@ export default {
     data: () => {
         return {
             items: {},
+            itemsRef: db.ref("items/" + auth.currentUser.uid),
         };
     },
     mounted() {
-        db.ref(
-            "todos/" + auth.currentUser.uid + "/" + this.todosIndex + "/items"
-        ).on("value", (snapshot) => {
+        this.itemsRef.child(this.todosIndex).on("value", (snapshot) => {
             this.items = snapshot.val();
         });
     },

@@ -32,6 +32,7 @@
 <script>
 import { db, auth } from "@/firebase";
 import TodoSubItem from "./TodoSubItem";
+import { mapActions } from "vuex";
 
 export default {
     name: "TodoItemDropdown",
@@ -41,84 +42,72 @@ export default {
         return {
             date: "",
             subItems: {},
+            itemRef: db.ref("items/" + auth.currentUser.uid),
+            subItemRef: db.ref("subItems/" + auth.currentUser.uid),
         };
     },
     mounted() {
-        const itemRef = db.ref(
-            "todos/" +
-                auth.currentUser.uid +
-                "/" +
-                this.todosIndex +
-                "/items/" +
-                this.itemIndex
-        );
-        itemRef.on("value", (snapshot) => {
-            const item = snapshot.val();
-            this.date =
-                item.targetDate === "" ? "No target date" : item.targetDate;
-        });
+        this.itemRef
+            .child(this.todosIndex)
+            .child(this.itemIndex)
+            .on("value", (snapshot) => {
+                const item = snapshot.val();
+                this.date =
+                    item.targetDate === "" ? "No target date" : item.targetDate;
+            });
 
-        const subItemRef = db.ref(
-            "todos/" +
-                auth.currentUser.uid +
-                "/" +
-                this.todosIndex +
-                "/subItems/" +
-                this.itemIndex
-        );
-
-        subItemRef.on("value", (snapshot) => {
-            this.subItems = snapshot.val();
-        });
+        this.subItemRef
+            .child(this.todosIndex)
+            .child(this.itemIndex)
+            .on("value", (snapshot) => {
+                this.subItems = snapshot.val();
+            });
     },
     methods: {
+        ...mapActions(["deleteItem", "createNewSubItem"]),
         handleItemDelete() {
-            const itemRef = db.ref(
-                "todos/" +
-                    auth.currentUser.uid +
-                    "/" +
-                    this.todosIndex +
-                    "/items/" +
-                    this.itemIndex
-            );
-            itemRef.remove();
-
-            const subItemRef = db.ref(
-                "todos/" +
-                    auth.currentUser.uid +
-                    "/" +
-                    this.todosIndex +
-                    "/subItems/" +
-                    this.itemIndex
-            );
-            subItemRef.remove();
+            const form = {
+                todosIndex: this.todosIndex,
+                itemIndex: this.itemIndex,
+            };
+            this.deleteItem(form);
         },
         handleNewSubTodo(e) {
-            const subItemRef = db.ref(
-                "todos/" +
-                    auth.currentUser.uid +
-                    "/" +
-                    this.todosIndex +
-                    "/subItems/" +
-                    this.itemIndex
-            );
-
-            const subItem = {
+            const form = {
                 title: e.target.value.trim(),
-                complete: false,
+                todosIndex: this.todosIndex,
+                itemIndex: this.itemIndex,
             };
-            subItemRef.push(subItem);
+            this.createNewSubItem(form);
+
+            // reset input field
             e.target.value = "";
 
-            const itemRef = db.ref(
-                "todos/" +
-                    auth.currentUser.uid +
-                    "/" +
-                    this.todosIndex +
-                    "/items/" +
-                    this.itemIndex
-            );
-            itemRef.update({ complete: false });
+            // const subItemRef = db.ref(
+            //     "todos/" +
+            //         auth.currentUser.uid +
+            //         "/" +
+            //         this.todosIndex +
+            //         "/subItems/" +
+            //         this.itemIndex
+            // );
+
+            // const subItem = {
+            //     title: e.target.value.trim(),
+            //     complete: false,
+            // };
+            // subItemRef.push(subItem);
+            // e.target.value = "";
+
+            // const itemRef = db.ref(
+            //     "todos/" +
+            //         auth.currentUser.uid +
+            //         "/" +
+            //         this.todosIndex +
+            //         "/items/" +
+            //         this.itemIndex
+            // );
+            // itemRef.update({ complete: false });
         },
     },
 };

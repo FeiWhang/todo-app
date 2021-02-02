@@ -53,6 +53,7 @@
 <script>
 import { db, auth } from "@/firebase";
 import TodoItemDropdown from "./TodoItemDropdown";
+import { mapActions } from "vuex";
 
 export default {
     name: "TodoItem",
@@ -65,72 +66,36 @@ export default {
             isDropdown: false,
             isShown: false,
             progress: 0,
+            itemRef: db.ref("items/" + auth.currentUser.uid),
         };
     },
     mounted() {
-        const itemRef = db.ref(
-            "todos/" +
-                auth.currentUser.uid +
-                "/" +
-                this.todosIndex +
-                "/items/" +
-                this.itemIndex
-        );
-        itemRef.on("value", (snapshot) => {
-            const item = snapshot.val();
-            this.title = item.title;
-            this.isCompleted = item.complete;
-            this.isShown = item.shown;
-        });
-
-        const subItemsRef = db.ref(
-            "todos/" +
-                auth.currentUser.uid +
-                "/" +
-                this.todosIndex +
-                "/subItems/" +
-                this.itemIndex
-        );
-
-        subItemsRef.on("value", (snapshot) => {
-            let completeCount = 0;
-            let totalCount = 0;
-            snapshot.forEach((childSnapshot) => {
-                const subItem = childSnapshot.val();
-                if (subItem.complete) {
-                    completeCount = completeCount + 1;
-                }
-                totalCount = totalCount + 1;
+        this.itemRef
+            .child(this.todosIndex)
+            .child(this.itemIndex)
+            .on("value", (snapshot) => {
+                const item = snapshot.val();
+                this.title = item.title;
+                this.isCompleted = item.complete;
+                this.isShown = item.shown;
+                this.progress =
+                    item.subItem == 0
+                        ? 0
+                        : Math.floor(
+                              ((item.subItem - item.activeSubItem) * 100) /
+                                  item.subItem
+                          );
             });
-
-            this.progress = Math.floor((completeCount * 100) / totalCount);
-        });
     },
     methods: {
+        ...mapActions(["completeItem"]),
         handleItemComplete() {
-            const itemRef = db.ref(
-                "todos/" +
-                    auth.currentUser.uid +
-                    "/" +
-                    this.todosIndex +
-                    "/items/" +
-                    this.itemIndex
-            );
-            itemRef.update({ complete: !this.isCompleted });
-
-            const subItemRef = db.ref(
-                "todos/" +
-                    auth.currentUser.uid +
-                    "/" +
-                    this.todosIndex +
-                    "/subItems/" +
-                    this.itemIndex
-            );
-            subItemRef.once("value", (snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                    childSnapshot.ref.update({ complete: this.isCompleted });
-                });
-            });
+            const form = {
+                todosIndex: this.todosIndex,
+                itemIndex: this.itemIndex,
+                isCompleted: this.isCompleted,
+            };
+            this.completeItem(form);
         },
 
         toggleDropdown() {

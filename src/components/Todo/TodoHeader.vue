@@ -20,10 +20,10 @@
             ></label>
 
             <input
-                class="TodoHeader__newTodo"
+                class="TodoHeader__newItem"
                 placeholder="What needs to be done?"
                 type="text"
-                v-on:keyup.enter="handleNewTodo"
+                v-on:keyup.enter="handleNewItem"
                 maxlength="45"
             />
             <button
@@ -52,19 +52,26 @@
 
 <script>
 import { db, auth } from "@/firebase";
+import { mapActions } from "vuex";
 
 export default {
     name: "TodoHeader",
     props: ["todosIndex"],
     data: () => {
         return {
+            isCompleted: false,
             todosTitle: "",
             pickedDate: "",
             showDatePicker: false,
+            todosRef: db.ref("todos/" + auth.currentUser.uid),
+            itemsRef: db.ref("items/" + auth.currentUser.uid),
         };
     },
     mounted() {
-        // get todo name from db
+        this.todosRef.child(this.todosIndex).on("value", (snapshot) => {
+            this.isCompleted = snapshot.val().complete;
+        });
+
         db.ref(
             "todos/" + auth.currentUser.uid + "/" + this.todosIndex + "/name"
         ).on("value", (snapshot) => {
@@ -72,31 +79,27 @@ export default {
         });
     },
     methods: {
+        ...mapActions(["removeTodo", "createNewItem", "completeAllItem"]),
         handleRemoveTodo() {
-            const todoRef = db.ref(
-                "todos/" + auth.currentUser.uid + "/" + this.todosIndex
-            );
-            todoRef.remove();
+            this.removeTodo(this.todosIndex);
         },
-        handleNewTodo(e) {
-            const item = {
+        handleNewItem(e) {
+            this.createNewItem({
                 title: e.target.value.trim(),
                 targetDate: this.pickedDate,
-                complete: false,
-                shown: true,
-            };
-            db.ref(
-                "todos/" +
-                    auth.currentUser.uid +
-                    "/" +
-                    this.todosIndex +
-                    "/items"
-            ).push(item);
+                todosIndex: this.todosIndex,
+            });
+
             this.pickedDate = "";
             e.target.value = "";
         },
         handleCompleteAll() {
-            console.log("complete all");
+            const form = {
+                isCompleted: this.isCompleted,
+                todosIndex: this.todosIndex,
+            };
+
+            this.completeAllItem(form);
         },
         toggleDatePicker() {
             this.showDatePicker = !this.showDatePicker;
@@ -133,7 +136,7 @@ export default {
         border: none;
     }
 
-    &__newTodo {
+    &__newItem {
         margin: 0;
         width: 88%;
         font-size: 20px;

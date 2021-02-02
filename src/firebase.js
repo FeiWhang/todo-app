@@ -18,9 +18,10 @@ firebase.initializeApp(firebaseConfig);
 // utils
 const db = firebase.database();
 const auth = firebase.auth();
+const fb = firebase;
 
 // make it persist
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 // export utils/refs
-export { db, auth };
+export { fb, db, auth };

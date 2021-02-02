@@ -22,8 +22,4 @@ auth.onAuthStateChanged((user) => {
     if (user && router.currentRoute.path != "/login") {
         store.dispatch("fetchProfile", user);
     }
-
-    if (user && router.currentRoute.path == "/todo") {
-        store.dispatch("fetchTodo");
-    }
 });

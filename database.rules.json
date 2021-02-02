@@ -1,6 +1,30 @@
 {
     "rules": {
-        ".read": false,
-        ".write": false
+        ".read": true,
+        ".write": false,
+
+        "users": {
+            "$uid": {
+                ".write": "$uid == auth.uid"
+            }
+        },
+
+        "todos": {
+            "$uid": {
+                ".write": "$uid == auth.uid"
+            }
+        },
+
+        "items": {
+            "$uid": {
+                ".write": "$uid == auth.uid"
+            }
+        },
+
+        "subItems": {
+            "$uid": {
+                ".write": "$uid == auth.uid"
+            }
+        }
     }
 }
