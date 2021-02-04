@@ -48,7 +48,6 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-
 export default {
     name: "TodoHeader",
     props: ["todosIndex"],
@@ -84,17 +83,19 @@ export default {
         },
         handleNewItem(e) {
             const title = e.target.value.trim();
-            console.log(title);
+            const d = new Date(this.pickedDate);
+            const timestamp = this.pickedDate === "" ? "" : d.getTime();
             if (title !== "") {
                 const form = {
                     title: title,
-                    targetDate: this.pickedDate,
+                    targetDate: timestamp,
                     todosIndex: this.todosIndex,
                 };
                 this.createNewItem(form);
                 this.pickedDate = "";
                 e.target.value = "";
             }
+            this.$emit("newItem");
         },
         handleCompleteAll() {
             const form = {
