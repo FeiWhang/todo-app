@@ -31,7 +31,6 @@
 
 <script>
 import TodoCard from "./TodoCard";
-import { db, auth } from "@/firebase";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -47,20 +46,21 @@ export default {
     },
     mounted() {
         this.initRef();
-        db.ref("todos/" + auth.currentUser.uid).on("value", (snapshot) => {
+        this.todosRef.on("value", (snapshot) => {
             this.todos = snapshot.val();
         });
     },
     computed: {
-        ...mapGetters(["userProfile"]),
+        ...mapGetters(["userProfile", "todosRef"]),
     },
     methods: {
-        ...mapActions(["createNewTodo", "initRef"]),
+        ...mapActions(["initRef", "createNewTodo"]),
         toggleNew() {
             this.showNew = !this.showNew;
         },
         handleNew(e) {
-            this.createNewTodo(e.target.value.trim());
+            const name = e.target.value.trim();
+            this.createNewTodo(name);
             e.target.value = "";
             this.toggleNew();
         },

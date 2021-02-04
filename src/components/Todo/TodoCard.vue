@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import { db, auth } from "@/firebase";
 import TodoHeader from "./TodoHeader";
 import TodoItem from "./TodoItem";
 import TodoFooter from "./TodoFooter";
+import { mapGetters } from "vuex";
 
 export default {
     name: "TodoCard",
@@ -24,8 +24,10 @@ export default {
     data: () => {
         return {
             items: {},
-            itemsRef: db.ref("items/" + auth.currentUser.uid),
         };
+    },
+    computed: {
+        ...mapGetters(["itemsRef"]),
     },
     mounted() {
         this.itemsRef.child(this.todosIndex).on("value", (snapshot) => {

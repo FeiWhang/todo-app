@@ -5,7 +5,7 @@
             <div class="TodoItemDropdownOption">
                 <button
                     class="TodoItemDropdownOption__delete"
-                    v-on:click="handleItemDelete"
+                    v-on:click="handleDeleteItem"
                 >
                     <v-icon color="#cc9a9a">mdi-close</v-icon>
                     <span>Delete this todo</span>
@@ -16,7 +16,7 @@
             class="TodoItemDropdown__newSubItem"
             placeholder="Add sub todo?"
             type="text"
-            v-on:keyup.enter="handleNewSubTodo"
+            v-on:keyup.enter="handleNewSubItem"
             maxlength="45"
         />
         <TodoSubItem
@@ -30,24 +30,25 @@
 </template>
 
 <script>
-import { db, auth } from "@/firebase";
+import { mapGetters, mapActions } from "vuex";
 import TodoSubItem from "./TodoSubItem";
-import { mapActions } from "vuex";
 
 export default {
     name: "TodoItemDropdown",
     components: { TodoSubItem },
     props: ["todosIndex", "itemIndex"],
+    computed: {
+        ...mapGetters(["itemsRef", "subItemsRef"]),
+    },
     data: () => {
         return {
             date: "",
             subItems: {},
-            itemRef: db.ref("items/" + auth.currentUser.uid),
-            subItemRef: db.ref("subItems/" + auth.currentUser.uid),
         };
     },
     mounted() {
-        this.itemRef
+        // get the target date
+        this.itemsRef
             .child(this.todosIndex)
             .child(this.itemIndex)
             .on("value", (snapshot) => {
@@ -56,7 +57,8 @@ export default {
                     item.targetDate === "" ? "No target date" : item.targetDate;
             });
 
-        this.subItemRef
+        // get the subItems
+        this.subItemsRef
             .child(this.todosIndex)
             .child(this.itemIndex)
             .on("value", (snapshot) => {
@@ -65,49 +67,20 @@ export default {
     },
     methods: {
         ...mapActions(["deleteItem", "createNewSubItem"]),
-        handleItemDelete() {
-            const form = {
+        handleDeleteItem() {
+            this.deleteItem({
                 todosIndex: this.todosIndex,
                 itemIndex: this.itemIndex,
-            };
-            this.deleteItem(form);
+            });
         },
-        handleNewSubTodo(e) {
-            const form = {
+        handleNewSubItem(e) {
+            this.createNewSubItem({
                 title: e.target.value.trim(),
                 todosIndex: this.todosIndex,
                 itemIndex: this.itemIndex,
-            };
-            this.createNewSubItem(form);
+            });
 
-            // reset input field
             e.target.value = "";
-
-            // const subItemRef = db.ref(
-            //     "todos/" +
-            //         auth.currentUser.uid +
-            //         "/" +
-            //         this.todosIndex +
-            //         "/subItems/" +
-            //         this.itemIndex
-            // );
-
-            // const subItem = {
-            //     title: e.target.value.trim(),
-            //     complete: false,
-            // };
-            // subItemRef.push(subItem);
-            // e.target.value = "";
-
-            // const itemRef = db.ref(
-            //     "todos/" +
-            //         auth.currentUser.uid +
-            //         "/" +
-            //         this.todosIndex +
-            //         "/items/" +
-            //         this.itemIndex
-            // );
-            // itemRef.update({ complete: false });
         },
     },
 };

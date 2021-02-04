@@ -15,78 +15,37 @@
 </template>
 
 <script>
-import { db, auth } from "@/firebase";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
     name: "TodoFooter",
     props: ["todosIndex"],
+    computed: {
+        ...mapGetters(["todosRef"]),
+    },
     data: () => {
         return {
             hideComplete: false,
         };
     },
     mounted() {
-        const todoRef = db.ref(
-            "todos/" + auth.currentUser.uid + "/" + this.todosIndex
-        );
-        todoRef.on("value", (snapshot) => {
-            const todo = snapshot.val();
-            this.hideComplete = todo.hideComplete;
-        });
+        this.todosRef
+            .child(this.todosIndex)
+            .child("hideComplete")
+            .on("value", (snapshot) => {
+                this.hideComplete = snapshot.val();
+            });
     },
     methods: {
+        ...mapActions(["hideCompleted", "clearCompleted"]),
         handleHideCompleted() {
-            const todoRef = db.ref(
-                "todos/" + auth.currentUser.uid + "/" + this.todosIndex
-            );
-
-            todoRef.update({ hideComplete: this.hideComplete });
-
-            const itemsRef = db.ref(
-                "todos/" +
-                    auth.currentUser.uid +
-                    "/" +
-                    this.todosIndex +
-                    "/items"
-            );
-
-            itemsRef.once("value", (snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                    const item = childSnapshot.val();
-                    if (item.complete) {
-                        childSnapshot.ref.update({ shown: !item.shown });
-                    }
-                });
+            this.hideCompleted({
+                isHideComplete: this.hideComplete,
+                todosIndex: this.todosIndex,
             });
         },
         handleClearCompleted() {
-            const itemsRef = db.ref(
-                "todos/" +
-                    auth.currentUser.uid +
-                    "/" +
-                    this.todosIndex +
-                    "/items"
-            );
-
-            itemsRef.once("value", (snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                    const item = childSnapshot.val();
-
-                    const subItemRef = db.ref(
-                        "todos/" +
-                            auth.currentUser.uid +
-                            "/" +
-                            this.todosIndex +
-                            "/subItems/" +
-                            childSnapshot.key
-                    );
-
-                    if (item.complete) {
-                        childSnapshot.ref.remove();
-                        subItemRef.remove();
-                    }
-                });
-            });
+            this.clearCompleted(this.todosIndex);
         },
     },
 };

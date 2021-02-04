@@ -51,9 +51,8 @@
 </template>
 
 <script>
-import { db, auth } from "@/firebase";
+import { mapGetters, mapActions } from "vuex";
 import TodoItemDropdown from "./TodoItemDropdown";
-import { mapActions } from "vuex";
 
 export default {
     name: "TodoItem",
@@ -66,43 +65,60 @@ export default {
             isDropdown: false,
             isShown: false,
             progress: 0,
-            itemRef: db.ref("items/" + auth.currentUser.uid),
         };
     },
+
     mounted() {
-        this.itemRef
+        // fetched the item
+        this.itemsRef
             .child(this.todosIndex)
             .child(this.itemIndex)
             .on("value", (snapshot) => {
                 const item = snapshot.val();
+
                 this.title = item.title;
                 this.isCompleted = item.complete;
                 this.isShown = item.shown;
+
+                this.isCompleted ? (this.progress = 100) : (this.progress = 0);
+            });
+
+        // calculate the progress
+        this.subItemsRef
+            .child(this.todosIndex)
+            .child(this.itemIndex)
+            .on("value", (snapshot) => {
+                let completeCount = 0;
+                let totalCount = 0;
+                snapshot.forEach((childSnapshot) => {
+                    const subItem = childSnapshot.val();
+
+                    subItem.complete ? (completeCount = completeCount + 1) : {};
+                    totalCount = totalCount + 1;
+                });
+
                 this.progress =
-                    item.subItem == 0
+                    totalCount == 0
                         ? 0
-                        : Math.floor(
-                              ((item.subItem - item.activeSubItem) * 100) /
-                                  item.subItem
-                          );
+                        : Math.floor((completeCount * 100) / totalCount);
             });
     },
     methods: {
         ...mapActions(["completeItem"]),
         handleItemComplete() {
-            const form = {
+            this.completeItem({
+                isCompleted: this.isCompleted,
                 todosIndex: this.todosIndex,
                 itemIndex: this.itemIndex,
-                isCompleted: this.isCompleted,
-            };
-            this.completeItem(form);
+            });
         },
-
         toggleDropdown() {
             this.isDropdown = !this.isDropdown;
         },
     },
     computed: {
+        ...mapGetters(["itemsRef", "subItemsRef"]),
+
         titleStyle() {
             return {
                 "text-decoration": this.isCompleted ? "line-through" : "none",
