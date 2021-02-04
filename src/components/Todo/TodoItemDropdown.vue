@@ -53,8 +53,43 @@ export default {
             .child(this.itemIndex)
             .on("value", (snapshot) => {
                 const item = snapshot.val();
-                this.date =
-                    item.targetDate === "" ? "No target date" : item.targetDate;
+
+                if (item.targetDate === "") {
+                    this.date = "No target date";
+                } else {
+                    let d = new Date(item.targetDate);
+                    const days = [
+                        "Sunday",
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                    ];
+                    const months = [
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "June",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December",
+                    ];
+                    this.date =
+                        days[d.getDay()] +
+                        ", " +
+                        d.getDate() +
+                        " " +
+                        months[d.getMonth()] +
+                        " " +
+                        d.getFullYear();
+                }
             });
 
         // get the subItems
