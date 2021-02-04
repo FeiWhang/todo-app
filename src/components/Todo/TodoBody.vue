@@ -1,8 +1,16 @@
 <template>
     <div class="TodoBody">
-        <h1 class="TodoBody__greeting">
-            {{ "Hi, " + this.userProfile.firstName }}
-        </h1>
+        <div class="TodoBody__greeting">
+            <h1>
+                {{ "Hi, " + this.userProfile.firstName + " !" }}
+            </h1>
+            <h1>
+                {{ "you have completed " + this.completed + " tasks" }}
+            </h1>
+            <h1>
+                {{ "only " + this.active + " to go" }}
+            </h1>
+        </div>
 
         <TodoCard
             v-for="(todo, index) in this.todos"
@@ -44,6 +52,8 @@ export default {
         return {
             todos: {},
             showNew: false,
+            active: 0,
+            completed: 0,
         };
     },
     mounted() {
@@ -51,9 +61,26 @@ export default {
         this.todosRef.on("value", (snapshot) => {
             this.todos = snapshot.val();
         });
+
+        // count active and completed
+        this.itemsRef.on("value", (snapshot) => {
+            let activeCount = 0;
+            let completedCount = 0;
+            snapshot.forEach((childSnapshot) => {
+                childSnapshot.forEach((itemSnapshot) => {
+                    const item = itemSnapshot.val();
+                    item.complete
+                        ? (completedCount = completedCount + 1)
+                        : (activeCount = activeCount + 1);
+                });
+            });
+
+            this.active = activeCount;
+            this.completed = completedCount;
+        });
     },
     computed: {
-        ...mapGetters(["userProfile", "todosRef"]),
+        ...mapGetters(["userProfile", "todosRef", "itemsRef"]),
     },
     methods: {
         ...mapActions(["initRef", "createNewTodo"]),
