@@ -14,17 +14,17 @@
             <button class="NewTodo__toggleNew" @click="toggleNew">
                 <v-icon color="#1080c5">mdi-plus</v-icon>
                 <span>Create new todo</span>
+                <v-scale-transition origin="top center">
+                    <div class="NewTodo__new" v-if="showNew">
+                        <input
+                            type="text"
+                            placeholder="todo name"
+                            maxlength="18"
+                            v-on:keyup.enter="handleNew"
+                        />
+                    </div>
+                </v-scale-transition>
             </button>
-            <v-scale-transition origin="top center">
-                <div class="NewTodo__new" v-if="showNew">
-                    <input
-                        type="text"
-                        placeholder="todo name"
-                        maxlength="18"
-                        v-on:keyup.enter="handleNew"
-                    />
-                </div>
-            </v-scale-transition>
         </div>
     </div>
 </template>
@@ -81,6 +81,7 @@ export default {
     position: relative;
     margin-top: 6rem;
     &__toggleNew {
+        position: relative;
         border-radius: 32px;
         display: inline-flex;
         outline: 0;
@@ -101,7 +102,6 @@ export default {
     &__new {
         position: absolute;
         top: 59px;
-        left: 39.5%;
         padding: 8px 16px;
         border-radius: 16px;
         box-shadow: 0 0 10px #b8b8b8;
