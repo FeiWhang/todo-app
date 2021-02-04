@@ -83,15 +83,18 @@ export default {
             this.removeTodo(this.todosIndex);
         },
         handleNewItem(e) {
-            const form = {
-                title: e.target.value.trim(),
-                targetDate: this.pickedDate,
-                todosIndex: this.todosIndex,
-            };
-            this.createNewItem(form);
-
-            this.pickedDate = "";
-            e.target.value = "";
+            const title = e.target.value.trim();
+            console.log(title);
+            if (title !== "") {
+                const form = {
+                    title: title,
+                    targetDate: this.pickedDate,
+                    todosIndex: this.todosIndex,
+                };
+                this.createNewItem(form);
+                this.pickedDate = "";
+                e.target.value = "";
+            }
         },
         handleCompleteAll() {
             const form = {
