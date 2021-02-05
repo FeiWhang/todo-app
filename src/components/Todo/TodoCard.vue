@@ -2,10 +2,10 @@
     <div class="TodoCard">
         <TodoHeader :todosIndex="todosIndex" />
         <TodoItem
-            v-for="(item, index) in items"
+            v-for="(itemKey, index) in itemKeys"
             :key="index"
             :todosIndex="todosIndex"
-            :itemIndex="index"
+            :itemIndex="itemKey"
         />
         <TodoFooter :todosIndex="todosIndex" />
     </div>
@@ -23,16 +23,24 @@ export default {
     props: ["todosIndex"],
     data: () => {
         return {
-            items: {},
+            itemKeys: [],
         };
     },
     computed: {
         ...mapGetters(["itemsRef"]),
     },
     mounted() {
-        this.itemsRef.child(this.todosIndex).on("value", (snapshot) => {
-            this.items = snapshot.val();
-        });
+        this.itemsRef
+            .child(this.todosIndex)
+            .orderByChild("targetDate")
+            .on("value", (snapshot) => {
+                let fetchedItemKeys = [];
+                snapshot.forEach((childSnapshot) => {
+                    fetchedItemKeys.push(childSnapshot.key);
+                });
+                this.itemKeys = fetchedItemKeys;
+                console.log(this.itemKeys);
+            });
     },
 };
 </script>

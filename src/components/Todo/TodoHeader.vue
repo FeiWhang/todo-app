@@ -96,6 +96,9 @@ export default {
                 e.target.value = "";
             }
             this.$emit("newItem");
+            // for some reason have to refresh the page
+            // other wise the ordering is messed up
+            this.$router.go(this.$router.currentRoute);
         },
         handleCompleteAll() {
             const form = {
